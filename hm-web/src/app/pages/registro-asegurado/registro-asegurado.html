@@ -1,0 +1,169 @@
+<div class="layout-hm">
+    <div class="header-hm">
+        <button class="btn-pill btn-light" (click)="cancelar()">
+            <i class="icon-back">←</i> Volver a la Lista
+        </button>
+        <h2 class="title-hm">{{ esEdicion ? 'Editar Asegurado' : 'Registrar Nuevo Asegurado' }}</h2>
+        <div></div>
+    </div>
+
+    <div class="card-hm form-container">
+        <form [formGroup]="formulario" (ngSubmit)="guardar()">
+
+            <div class="form-row-hm">
+                <div class="form-group-hm search-group-hm" style="flex: 1;">
+                    <div class="input-wrapper">
+                        <label>NHCL (Historia Clínica)</label>
+                        <input type="text" formControlName="nhcl" class="input-pill" placeholder="Ej: 781002">
+                    </div>
+                    @if (!esEdicion) {
+                    <button type="button" class="btn-pill btn-info search-btn" (click)="abrirModal()" title="Buscar">
+                        🔍 Buscar
+                    </button> }
+
+                </div>
+                <div class="form-group-hm" style="flex: 1;">
+                    @if (formulario.get('nhcl')?.invalid && formulario.get('nhcl')?.touched) {
+                    <small class="error-text" style="align-self: flex-start; margin-top: 35px;">NHCL requerido.</small> }
+                </div>
+            </div>
+
+            <div class="form-row-hm">
+                <div class="form-group-hm">
+                    <label>Primer Nombre</label>
+                    <input type="text" formControlName="primerNombre" class="input-pill"> @if (formulario.get('primerNombre')?.invalid && formulario.get('primerNombre')?.touched) {
+                    <small class="error-text">Requerido.</small> }
+                </div>
+                <div class="form-group-hm">
+                    <label>Segundo Nombre</label>
+                    <input type="text" formControlName="segundoNombre" class="input-pill">
+                </div>
+            </div>
+
+            <div class="form-row-hm">
+                <div class="form-group-hm">
+                    <label>Primer Apellido</label>
+                    <input type="text" formControlName="primerApellido" class="input-pill"> @if (formulario.get('primerApellido')?.invalid && formulario.get('primerApellido')?.touched) {
+                    <small class="error-text">Requerido.</small> }
+                </div>
+                <div class="form-group-hm">
+                    <label>Segundo Apellido</label>
+                    <input type="text" formControlName="segundoApellido" class="input-pill">
+                </div>
+            </div>
+
+            <div class="form-row-hm">
+                <div class="form-group-hm">
+                    <label>Fecha de Ingreso</label>
+                    <input type="date" formControlName="fechaIngreso" class="input-pill"> @if (formulario.get('fechaIngreso')?.invalid && formulario.get('fechaIngreso')?.touched) {
+                    <small class="error-text">Requerido.</small> }
+                </div>
+                <div class="form-group-hm">
+                    <label>Fecha de Salida (Opcional)</label>
+                    <input type="date" formControlName="fechaSalida" class="input-pill">
+                </div>
+            </div>
+
+            <div class="form-row-hm">
+                <div class="form-group-hm">
+                    <label>Tipo de Plan</label>
+                    <select formControlName="tipoPlan" class="input-pill select-pill">
+                        @if (listaPlanes.length === 0) {
+                            <option [value]="null">Cargando planes...</option>
+                        } @else {
+                            <option [value]="null" disabled selected>Seleccione un plan</option>
+                            @for (plan of listaPlanes; track plan.CD_PLAN) {
+                                <option [value]="plan.CD_PLAN">{{ plan.DESCRIPCION }}</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group-hm">
+                    <label>Tipo de Asegurado</label>
+                    <select formControlName="tipoAsegurado" class="input-pill select-pill">
+                        @if (listaTipos.length === 0) {
+                            <option [value]="null">Cargando tipos...</option>
+                        } @else {
+                            <option [value]="null" disabled selected>Seleccione un tipo</option>
+                            @for (item of listaTipos; track item.PK_CODIGO) {
+                                <option [value]="item.PK_CODIGO">{{ item.DESCRIPCION }}</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions-hm">
+                <button type="button" class="btn-pill btn-light" (click)="cancelar()">Cancelar</button>
+                <button type="submit" class="btn-pill btn-success" [disabled]="formulario.invalid">Guardar Datos</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay-hm" *ngIf="mostrarModal">
+    <div class="modal-box-hm modal-lg">
+        <div class="modal-header-hm">
+            <h3 class="title-hm" style="font-size: 1.2rem;">Buscar</h3>
+            <button class="btn-close-hm" (click)="cerrarModal()">×</button>
+        </div>
+
+        <div class="modal-body-hm">
+            <p style="margin-top: 0; color: #666; font-size: 0.9rem; margin-bottom: 20px;">Selecciona el criterio e ingresa los datos para buscar coincidencias.</p>
+
+            <div class="filter-row" style="margin-bottom: 20px;">
+                <div class="radio-group-hm">
+                    <label><input type="radio" [(ngModel)]="tipoBusqueda" value="cedula"> Cédula</label>
+                    <label style="display:none;"><input type="radio" [(ngModel)]="tipoBusqueda" value="nombres"> Nombres Completos</label>
+                </div>
+                <div class="search-group-hm" style="flex:1;">
+                    <input [(ngModel)]="criterioBusqueda" [placeholder]="tipoBusqueda === 'cedula' ? 'Ej: 1712345678' : 'Ej: Perez Loor Juan'" class="input-pill" (keyup.enter)="buscar()">
+                    <button class="btn-pill btn-primary" (click)="buscar()">Buscar</button>
+                </div>
+            </div>
+
+            <small class="error-text" *ngIf="errorBusqueda">{{ errorBusqueda }}</small>
+
+            <div class="table-container-hm" *ngIf="resultadosBusqueda.length > 0">
+                <table class="table-hm">
+                    <thead>
+                        <tr>
+                            <th>Cédula</th>
+                            <th>NHCL</th>
+                            <th>Apellidos y Nombres</th>
+                            <th>Tipo</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (res of resultadosBusqueda; track $index) {
+                        <tr>
+                            <td>{{ res.cedula || res.CEDULA || '-' }}</td>
+                            <td><strong>{{ res.nhcl || res.NHCL || res.CD_NHCL }}</strong></td>
+                            <td class="text-left">
+                                {{ res.primerApellido || res.PRIMERAPELLIDO || res.AP_PRIMER }} {{ res.segundoApellido || res.SEGUNDOAPELLIDO || res.AP_SEGUNDO }} {{ res.primerNombre || res.PRIMERNOMBRE || res.NM_PRIMER }} {{ res.segundoNombre || res.SEGUNDONOMBRE || res.NM_SEGUNDO
+                                }}
+                            </td>
+                            <td>
+                                <span class="badge-pill" [ngClass]="">
+                                    {{ res.tipoAsegurado || res.TIPOASEGURADO || res.TP_ASEGURADO || 'No definido' }}
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn-pill btn-success btn-sm" (click)="seleccionarPersona(res)">
+                                    Traer datos
+                                </button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal-footer-hm" style="display: flex; justify-content: flex-end; padding: 15px 25px; border-top: 1px solid #eaedf1;">
+            <button class="btn-pill btn-light" (click)="cerrarModal()">Cerrar Ventana</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+.no-auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.no-auth-card {
+    max-width: 500px;
+    text-align: center;
+    padding: 50px 40px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.icon-section {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+.error-code-hm {
+    font-size: 5rem;
+    font-weight: 800;
+    color: #eb4d4b;
+    /* Rojo de alerta usado en Toastr */
+    margin: 0;
+    line-height: 1;
+}
+
+.error-title-hm {
+    color: #4b6584;
+    font-size: 1.8rem;
+    margin-top: 10px;
+}
+
+.error-message-hm {
+    color: #8395a7;
+    line-height: 1.6;
+    margin: 20px 0 30px;
+}
+
+.separator-hm {
+    border: 0;
+    border-top: 1px solid #eaedf1;
+    margin: 25px 0;
+}
+
+.help-text-hm {
+    font-size: 0.85rem;
+    color: #adb5bd;
+}
+
+
+/* Animación de entrada */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

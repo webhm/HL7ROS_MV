@@ -1,0 +1,42 @@
+<nav class="navbar-hm navbar-blue">
+    <div class="navbar-brand-hm">
+        <a routerLink="/" class="logo-link">
+            <img [src]="logoPath" alt="Logo Hospital" class="app-logo-hm logo-on-blue">
+        </a>
+    </div>
+
+    <button class="menu-toggle-hm toggle-white" (click)="toggleMenu()"> <span class="bar-hm"></span>
+        <span class="bar-hm"></span>
+        <span class="bar-hm"></span>
+    </button>
+
+    <div class="navbar-content-hm content-blue" [class.active]="isMenuOpen">
+        <ul class="navbar-nav-hm">
+            <li class="nav-item-hm">
+                <a routerLink="/home" routerLinkActive="active-link" (click)="toggleMenu()">Inicio</a>
+            </li>
+
+            <li class="nav-item-hm">
+                <a routerLink="/asegurados" routerLinkActive="active-link" (click)="toggleMenu()">Asegurados</a>
+            </li>
+            <li class="nav-item-hm">
+                <a routerLink="/configuracion" routerLinkActive="active-link" (click)="toggleMenu()">Configuración</a>
+            </li>
+            <li class="nav-item-hm">
+                <a routerLink="/perfil" routerLinkActive="active-link" (click)="toggleMenu()">Mi Perfil</a>
+            </li>
+        </ul>
+
+        @if (userService.currentUser(); as user) {
+        <div class="user-widget-hm widget-on-blue">
+            <div class="user-info-hm">
+                <span class="user-name-hm">{{ user.username }}</span>
+                <span class="user-role-hm" style="display:none;">{{ user.rol }}</span>
+            </div>
+            <div class="user-avatar-mini-hm avatar-white">
+                {{ user.username | slice:0:2 }}
+            </div>
+        </div>
+        }
+    </div>
+</nav>

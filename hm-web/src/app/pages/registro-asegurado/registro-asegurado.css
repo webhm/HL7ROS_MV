@@ -1,0 +1,413 @@
+/* =========================================
+   1. ESTRUCTURA Y CABECERA (HOSPITAL METROPOLITANO)
+========================================= */
+
+.layout-hm {
+    max-width: 1000px;
+    margin: 20px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0 20px;
+}
+
+.header-hm {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin-bottom: 15px;
+}
+
+.title-hm {
+    font-size: 1.4rem;
+    color: #4b6584;
+    font-weight: 700;
+    margin: 0;
+}
+
+.card-hm {
+    background: white;
+    border: 1px solid #eaedf1;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+
+/* =========================================
+   2. BOTONES PÍLDORA GLOBALES
+========================================= */
+
+.btn-pill {
+    border: none;
+    padding: 10px 24px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-light {
+    background-color: #f1f3f5;
+    color: #495057;
+    border: 1px solid #e9ecef;
+}
+
+.btn-light:hover {
+    background-color: #e2e6ea;
+}
+
+.btn-primary {
+    background-color: #008cd6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0077b5;
+}
+
+.btn-primary:disabled {
+    background-color: #80c5ea;
+    cursor: not-allowed;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+}
+
+.btn-success {
+    background-color: #198754;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #157347;
+}
+
+.btn-success:disabled {
+    background-color: #8cd4a9;
+    cursor: not-allowed;
+}
+
+.btn-sm {
+    padding: 4px 12px;
+    font-size: 0.8rem;
+}
+
+
+/* =========================================
+   3. FORMULARIO INSTITUCIONAL
+========================================= */
+
+.form-row-hm {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-group-hm {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group-hm label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #34495e;
+}
+
+
+/* Agrupación específica para botón buscar y input */
+
+.search-group-hm {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.search-group-hm .input-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.search-btn {
+    height: 42px;
+    padding: 0 20px;
+}
+
+
+/* Inputs estilo píldora */
+
+.input-pill {
+    padding: 10px 18px;
+    border: 1px solid #ced4da;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    color: #495057;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.input-pill:focus {
+    border-color: #008cd6;
+    box-shadow: 0 0 0 3px rgba(0, 140, 214, 0.1);
+}
+
+.input-pill:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+}
+
+.select-pill {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334495e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+}
+
+.input-pill:disabled {
+    background-color: #f8f9fa;
+    color: #adb5bd;
+    cursor: not-allowed;
+    border-color: #e9ecef;
+}
+
+
+/* Efecto visual de carga sutil para los selectores */
+
+select.input-pill:disabled {
+    opacity: 0.7;
+    font-style: italic;
+}
+
+
+/* Errores y Acciones inferiores */
+
+.error-text {
+    color: #dc3545;
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.form-actions-hm {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    border-top: 1px solid #eaedf1;
+    padding-top: 20px;
+}
+
+
+/* =========================================
+   4. MODAL AVANZADO (MISMO DISEÑO)
+========================================= */
+
+.modal-overlay-hm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+}
+
+.modal-box-hm {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-lg {
+    max-width: 800px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header-hm {
+    background: #f8f9fa;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eaedf1;
+}
+
+.btn-close-hm {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #666;
+    cursor: pointer;
+}
+
+.modal-body-hm {
+    padding: 25px;
+}
+
+
+/* Filtros radio buttons */
+
+.radio-group-hm {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: 1px solid #eaedf1;
+}
+
+.radio-group-hm label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #34495e;
+    margin: 0;
+}
+
+.radio-group-hm input[type="radio"] {
+    margin: 0;
+    cursor: pointer;
+}
+
+.filter-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+
+/* =========================================
+   5. TABLA Y BADGES DENTRO DEL MODAL
+========================================= */
+
+.table-container-hm {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.table-hm {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.table-hm th {
+    background-color: #008cd6;
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 12px 10px;
+    position: sticky;
+    top: 0;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-hm td {
+    padding: 10px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table-hm tr:hover {
+    background-color: #f1f7fc;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.badge-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge-colaborador {
+    background-color: #e3f2fd;
+    color: #008cd6;
+}
+
+.badge-medico {
+    background-color: #fff3e0;
+    color: #e67e22;
+}
+
+.badge-especial {
+    background-color: #f3e5f5;
+    color: #8e44ad;
+}
+
+.badge-default {
+    background-color: #f5f5f5;
+    color: #666;
+}
+
+
+/* Responsividad para Móviles */
+
+@media (max-width: 768px) {
+    .form-row-hm {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-group-hm {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-btn {
+        height: auto;
+        padding: 10px;
+    }
+}

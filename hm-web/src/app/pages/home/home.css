@@ -1,0 +1,183 @@
+/* =========================================
+   1. ESTRUCTURA GLOBAL (HOSPITAL METROPOLITANO)
+========================================= */
+
+.layout-hm {
+    max-width: 800px;
+    margin: 60px auto;
+    /* Mayor margen superior para centrar verticalmente */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 0 20px;
+}
+
+.card-hm {
+    background: white;
+    border: 1px solid #eaedf1;
+    border-radius: 12px;
+    padding: 50px 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    text-align: center;
+}
+
+
+/* =========================================
+   2. TIPOGRAFÍA E ÍCONO
+========================================= */
+
+.welcome-icon-hm {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    animation: fadeInDown 0.5s ease-out;
+}
+
+.title-hm {
+    font-size: 2.2rem;
+    color: #008cd6;
+    /* Azul institucional para el saludo */
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+
+.subtitle-hm {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   3. BOTONES Y ANIMACIONES
+========================================= */
+
+.home-actions-hm {
+    margin-top: 35px;
+}
+
+.btn-pill {
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background-color: #008cd6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0077b5;
+    box-shadow: 0 4px 12px rgba(0, 140, 214, 0.25);
+    /* Sombra azulada al pasar el mouse */
+    transform: translateY(-2px);
+    /* Pequeño salto hacia arriba */
+}
+
+
+/* Animación sutil de entrada */
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================
+   SOPORTE Y ACCESOS RÁPIDOS
+========================================= */
+
+.support-section-hm {
+    margin-top: 30px;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.grid-support-hm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.support-card {
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.support-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.support-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.support-card h4 {
+    margin: 0 0 10px 0;
+    color: #4b6584;
+    font-weight: 700;
+}
+
+.support-card p {
+    font-size: 0.9rem;
+    color: #8395a7;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+
+/* Enlace estilo píldora sutil */
+
+.link-pill-hm {
+    text-decoration: none;
+    color: #008cd6;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 8px 20px;
+    border: 2px solid #eaf3fa;
+    border-radius: 20px;
+    transition: 0.2s;
+}
+
+.link-pill-hm:hover {
+    background-color: #eaf3fa;
+}
+
+
+/* Animación */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Responsividad */
+
+@media (max-width: 600px) {
+    .grid-support-hm {
+        grid-template-columns: 1fr;
+    }
+}

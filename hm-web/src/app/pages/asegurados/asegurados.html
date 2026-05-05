@@ -1,0 +1,122 @@
+<div class="layout-hm">
+    <div class="header-hm">
+        <h2 class="title-hm">Gestión de Asegurados</h2>
+        <button class="btn-pill btn-primary" routerLink="/asegurados/nuevo">Nuevo Asegurado</button>
+    </div>
+
+    <div class="card-hm filter-box">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>Fecha Ingreso:</label>
+                <input type="date" [(ngModel)]="filtroFecha" (change)="aplicarFiltros()" class="input-pill">
+            </div>
+
+            <div class="filter-group">
+                <label>Tipo Asegurado:</label>
+                <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()" class="input-pill select-pill" [disabled]="cargandoFiltros">
+        
+                @if (cargandoFiltros) {
+                <option value="">Cargando tipos...</option>
+                } @else {
+                <option value="">TODOS</option>
+                @for (tipo of listaTipos; track tipo.PK_CODIGO) {
+                    <option [value]="tipo.PK_CODIGO">{{ tipo.DESCRIPCION }}</option>
+                }
+                }
+            </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Plan:</label>
+                <select [(ngModel)]="filtroPlan" (change)="aplicarFiltros()" class="input-pill select-pill" [disabled]="cargandoFiltros">
+        
+                @if (cargandoFiltros) {
+                <option value="">Cargando planes...</option>
+                } @else {
+                <option value="">TODOS</option>
+                @for (plan of listaPlanes; track plan.CD_PLAN) {
+                    <option [value]="plan.CD_PLAN">{{ plan.DESCRIPCION }}</option>
+                }
+                }
+            </select>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn-pill btn-light" (click)="limpiarFiltros()">Limpiar Filtros</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="empty-state-hm" *ngIf="cargando">
+        <p>Consultando base de datos, por favor espera...</p>
+    </div>
+
+    <div class="empty-state-hm error" *ngIf="errorCarga && !cargando">
+        <h3 style="margin-bottom: 15px;">Error de Conexión</h3>
+        <p style="margin-bottom: 20px;">No se pudo obtener la lista de asegurados desde el servidor. Recarga esta página nuevamente.</p>
+    </div>
+
+    <div class="table-container-hm" *ngIf="!cargando && !errorCarga">
+        <table class="table-hm">
+            <thead>
+                <tr>
+                    <th>NHCL</th>
+                    <th>Nombre Completo</th>
+                    <th>Tipo</th>
+                    <th>Ingreso</th>
+                    <th>Estado</th>
+                    <th>Plan</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of listaFiltrada; track $index) {
+                <tr>
+                    <td><strong>{{ item.nhcl || item.NHCL || item.CD_NHCL }}</strong></td>
+
+                    <td class="text-left">
+                        {{ item.primerApellido || item.PRIMERAPELLIDO || item.AP_PRIMER }} {{ item.segundoApellido || item.SEGUNDOAPELLIDO || item.AP_SEGUNDO }} {{ item.primerNombre || item.PRIMERNOMBRE || item.NM_PRIMER }} {{ item.segundoNombre || item.SEGUNDONOMBRE || item.NM_SEGUNDO
+                        }}
+                    </td>
+
+                    <td>
+                        <span [ngClass]="['badge-hm', getBadgeClass(item.tipoAsegurado)]">
+                            {{ obtenerDescripcionTipo(item.tipoAsegurado) }}
+                        </span>
+                    </td>
+
+                    <td>{{ (item.fechaIngreso || item.FECHAINGRESO || item.DT_INGRESO) | date:'dd/MM/yyyy' }}</td>
+
+                    <td>
+                        <span class="badge-pill" [class.badge-inactivo]="item.fechaSalida || item.FECHASALIDA || item.DT_SALIDA" [class.badge-activo]="!(item.fechaSalida || item.FECHASALIDA || item.DT_SALIDA)">
+                            {{ (item.fechaSalida || item.FECHASALIDA || item.DT_SALIDA) ? 'Inactivo' : 'Activo' }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {{ obtenerDescripcionPlan(item.tipoPlan) }} </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-pill btn-primary btn-sm" [routerLink]="['/asegurados/editar', (item.nhcl || item.NHCL || item.CD_NHCL)]">
+                                Editar
+                            </button>
+                            <button class="btn-pill btn-info btn-sm" [routerLink]="['/asegurados', (item.nhcl || item.NHCL || item.CD_NHCL), 'dependientes']">
+                                Dependientes
+                            </button>
+                            <button class="btn-pill btn-danger btn-sm" (click)="eliminar(item)">
+                                Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="7" class="empty-state-hm">
+                        No se encontraron asegurados en la base de datos o bajo estos filtros.
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

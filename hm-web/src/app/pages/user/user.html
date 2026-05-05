@@ -1,0 +1,66 @@
+<div class="layout-hm">
+
+    @if (userService.currentUser(); as usuario) {
+    <div class="header-hm align-start">
+        <div>
+            <h2 class="title-hm">Información del Usuario</h2>
+            <p class="subtitle-hm">Gestiona tu información personal y de cuenta.</p>
+        </div>
+        <button class="btn-pill btn-danger" (click)="cerrarSesion()">
+            Cerrar Sesión
+        </button>
+    </div>
+
+    <div class="card-hm profile-card-hm">
+
+        <div class="user-identity-hm">
+            <div class="avatar-large-hm">
+                {{ usuario.username | slice:0:2 }}
+            </div>
+            <div class="identity-text-hm">
+                <h2 class="user-fullname-hm">{{ usuario.nombre }} {{ usuario.apellido }}</h2>
+                <span class="badge-pill badge-rol-hm" style="display: none;">{{ usuario.rol }}</span>
+            </div>
+        </div>
+
+        <hr class="divider-hm">
+
+        <div class="details-grid-hm">
+            <div class="detail-item-hm">
+                <label>Nombre de Usuario (ID)</label>
+                <p class="value-text-hm">{{ usuario.username }}</p>
+            </div>
+
+            <div class="detail-item-hm" style="display: none;">
+                <label>Correo Electrónico</label>
+                <p class="value-text-hm">{{ usuario.email }}</p>
+            </div>
+
+            <div class="detail-item-hm" style="display: none;">
+                <label>Estado de Cuenta</label>
+                <div>
+                    <span class="badge-pill badge-activo">Activo</span>
+                </div>
+            </div>
+
+            <div class="detail-item-hm">
+                <label>Último Acceso</label>
+                <p class="value-text-hm">{{ dateUser | date:'medium' }}</p>
+            </div>
+        </div>
+
+        <div class="form-actions-hm" style="margin-top: 40px;">
+            <button class="btn-pill btn-light" style="display: none;">Cambiar Contraseña</button>
+            <button class="btn-pill btn-primary" style="display: none;">Editar Información</button>
+        </div>
+
+    </div>
+    } @else {
+    <div class="empty-state-hm card-hm">
+        <h3 style="color: #34495e; margin-bottom: 10px;">No has iniciado sesión</h3>
+        <p style="margin-bottom: 15px;">Por favor ingresa con un usuario en la URL.</p>
+        <span class="badge-pill badge-default">Ejemplo: /home?user=ADMIN</span>
+    </div>
+    }
+
+</div>

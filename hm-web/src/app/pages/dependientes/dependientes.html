@@ -1,0 +1,239 @@
+<div class="empty-state-hm" *ngIf="cargando">
+    <p>Cargando información del titular y sus dependientes...</p>
+</div>
+
+<div class="empty-state-hm error" *ngIf="errorTitular && !cargando">
+    <h3 style="margin-bottom: 15px;">Error al cargar datos</h3>
+    <p>No se pudo encontrar la información del titular.</p>
+    <button routerLink="/asegurados" class="btn-pill btn-light" style="margin-top: 20px;">
+        ← Volver al Listado
+    </button>
+</div>
+
+<div class="layout-hm" *ngIf="!cargando && !errorTitular && asegurado">
+
+    <div class="header-hm">
+        <button routerLink="/asegurados" class="btn-pill btn-light">
+            <i class="icon-back">←</i> Volver al Listado
+        </button>
+        <h2 class="title-hm">Dependientes</h2>
+        <div></div>
+    </div>
+
+    <div class="card-hm titular-card-hm">
+        <h3 class="titular-name">
+            {{ asegurado.primerApellido || asegurado.PRIMERAPELLIDO || asegurado.AP_PRIMER }} {{ asegurado.segundoApellido || asegurado.SEGUNDOAPELLIDO || asegurado.AP_SEGUNDO }} {{ asegurado.primerNombre || asegurado.PRIMERNOMBRE || asegurado.NM_PRIMER }}
+        </h3>
+        <div class="titular-info-hm">
+            <span class="info-badge"><strong>NHCL:</strong> {{ asegurado.nhcl || asegurado.NHCL || asegurado.CD_NHCL }}</span>
+            <span class="info-badge"><strong>Plan:</strong> {{ asegurado.tipoPlan || asegurado.TIPOPLAN || asegurado.TP_PLAN }}</span>
+            <span class="info-badge"><strong>Tipo:</strong> {{ asegurado.tipoAsegurado || asegurado.TIPOASEGURADO || asegurado.TP_ASEGURADO }}</span>
+            <span class="info-badge"><strong>Estado:</strong> {{ (asegurado.fechaSalida || asegurado.FECHASALIDA || asegurado.DT_SALIDA) ? 'Inactivo' : 'Activo' }}</span>
+        </div>
+    </div>
+
+    <div class="card-hm">
+        <div class="section-header-hm">
+            <h3 class="title-hm" style="font-size: 1.2rem;">Lista de Beneficiarios</h3>
+            <button class="btn-pill btn-primary" (click)="toggleFormulario()" *ngIf="!mostrarFormulario">
+                + Agregar Dependiente
+            </button>
+        </div>
+
+        <div class="form-container-inline-hm" *ngIf="mostrarFormulario">
+            <h4 class="form-title-hm">
+                {{ esEdicionDependiente ? 'Editar Dependiente' : 'Nuevo Dependiente' }}
+            </h4>
+
+            <form [formGroup]="formDependiente" (ngSubmit)="guardar()">
+                <div class="form-row-hm">
+                    <div class="form-group-hm search-group-hm" style="flex: 2;">
+                        <div class="input-wrapper">
+                            <input type="text" formControlName="nhcl" class="input-pill" placeholder="NHCL del Dependiente">
+                        </div>
+                        <button type="button" class="btn-pill btn-info search-btn" (click)="abrirModalBusqueda()" *ngIf="!esEdicionDependiente">
+                            🔍 Buscar
+                        </button>
+                    </div>
+
+
+                    <div class="form-group-hm">
+
+                        <select formControlName="parentesco" class="input-pill select-pill">
+                        @if (cargandoCatalogos) {
+                            <option [value]="null">Cargando parentescos...</option>
+                        } @else {
+                            <option [value]="null" disabled selected>Seleccione el parentesco</option>
+                            @for (p of listaParentescos; track p.CD_PARENTESCO) {
+                                <option [value]="p.CD_PARENTESCO">{{ p.DESCRIPCION }}(A)</option>
+                            }
+                        }
+                    </select> @if (formDependiente.get('parentesco')?.invalid && formDependiente.get('parentesco')?.touched) {
+                        <small class="error-text">El parentesco es obligatorio.</small> }
+                    </div>
+                </div>
+
+                <div class="form-row-hm">
+                    <div class="form-group-hm"><input type="text" formControlName="primerNombre" class="input-pill" placeholder="Primer Nombre"></div>
+                    <div class="form-group-hm"><input type="text" formControlName="segundoNombre" class="input-pill" placeholder="Segundo Nombre"></div>
+                </div>
+
+                <div class="form-row-hm">
+                    <div class="form-group-hm"><input type="text" formControlName="primerApellido" class="input-pill" placeholder="Primer Apellido"></div>
+                    <div class="form-group-hm"><input type="text" formControlName="segundoApellido" class="input-pill" placeholder="Segundo Apellido"></div>
+                </div>
+
+                <div class="form-row-hm">
+                    <div class="form-group-hm">
+                        <label>Fecha Nacimiento:</label>
+                        <input type="date" formControlName="fechaNacimiento" class="input-pill">
+                    </div>
+                    <div class="form-group-hm">
+                        <label>Sexo:</label>
+                        <select formControlName="sexo" class="input-pill select-pill">
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row-hm">
+                    <div class="form-group-hm">
+                        <label>Fecha Ingreso:</label>
+                        <input type="date" formControlName="fechaIngreso" class="input-pill">
+                    </div>
+                    <div class="form-group-hm">
+                        <label>Fecha Salida:</label>
+                        <input type="date" formControlName="fechaSalida" class="input-pill">
+                    </div>
+                </div>
+
+                <div class="form-actions-hm" style="gap: 10px;">
+                    <button type="button" class="btn-pill btn-light" (click)="cancelarEdicion()">
+                        Cancelar
+                    </button>
+                    <button type="submit" [disabled]="formDependiente.invalid" class="btn-pill btn-success">
+                        {{ esEdicionDependiente ? 'Actualizar Dependiente' : 'Guardar Dependiente' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container-hm mt-3">
+            <table class="table-hm">
+                <thead>
+                    <tr>
+                        <th>NHCL</th>
+                        <th>Nombre Completo</th>
+                        <th>Edad / Sexo</th>
+                        <th>Parentesco</th>
+                        <th>Ingreso</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (dep of asegurado?.dependientes || []; track $index) {
+                    <tr>
+                        <td><strong>{{ dep.nhcl || dep.NHCL || dep.CD_NHCL }}</strong></td>
+                        <td class="text-left">
+                            {{ dep.primerApellido || dep.PRIMERAPELLIDO || dep.AP_PRIMER }} {{ dep.segundoApellido || dep.SEGUNDOAPELLIDO || dep.AP_SEGUNDO }} {{ dep.primerNombre || dep.PRIMERNOMBRE || dep.NM_PRIMER }} {{ dep.segundoNombre || dep.SEGUNDONOMBRE || dep.NM_SEGUNDO
+                            }}
+                        </td>
+                        <td>
+                            <div class="age-hm">{{ calcularEdad(dep.fechaNacimiento || dep.FECHANACIMIENTO || dep.DT_NACIMIENTO) }}</div>
+                            <small class="sex-text">{{ dep.sexo || dep.SEXO || dep.TP_SEXO }}</small>
+                        </td>
+                        <td>{{ dep.parentesco || dep.PARENTESCO || dep.DS_PARENTESCO }}(a)</td>
+                        <td>{{ (dep.fechaIngreso || dep.FECHAINGRESO || dep.DT_INGRESO) | date:'dd/MM/yyyy' }}</td>
+                        <td>
+                            <span class="badge-pill" [class.badge-inactivo]="dep.fechaSalida || dep.FECHASALIDA || dep.DT_SALIDA" [class.badge-activo]="!(dep.fechaSalida || dep.FECHASALIDA || dep.DT_SALIDA)">
+                                {{ (dep.fechaSalida || dep.FECHASALIDA || dep.DT_SALIDA) ? 'Inactivo' : 'Activo' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-pill btn-primary btn-sm" (click)="prepararEdicion(dep)">
+                                    Editar
+                                </button>
+                                <button class="btn-pill btn-danger btn-sm" (click)="eliminar(dep)">
+                                    Eliminar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="7" class="empty-state-hm">No hay dependientes registrados para este titular.</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay-hm" *ngIf="mostrarModalBusqueda">
+    <div class="modal-box-hm modal-lg">
+        <div class="modal-header-hm">
+            <h3 class="title-hm" style="font-size: 1.2rem;">Buscar Persona</h3>
+            <button class="btn-close-hm" (click)="cerrarModalBusqueda()">×</button>
+        </div>
+
+        <div class="modal-body-hm">
+            <p style="color: #666; font-size: 0.95rem; margin-top: 0; margin-bottom: 20px;">Selecciona el criterio e ingresa los datos para buscar coincidencias.</p>
+
+            <div class="filter-row" style="margin-bottom: 20px;">
+                <div class="radio-group-hm">
+                    <label>
+                        <input type="radio" [(ngModel)]="tipoBusqueda" value="cedula"> Cédula
+                    </label>
+                    <label style="display:none;">
+                        <input type="radio" [(ngModel)]="tipoBusqueda" value="nombres"> Nombres Completos
+                    </label>
+                </div>
+
+                <div class="search-group-hm" style="flex:1;">
+                    <input [(ngModel)]="criterioBusqueda" [placeholder]="tipoBusqueda === 'cedula' ? 'Ej: 1712345678' : 'Ej: Perez Loor Juan'" class="input-pill" (keyup.enter)="buscarExterno()">
+                    <button class="btn-pill btn-primary" (click)="buscarExterno()">Buscar</button>
+                </div>
+            </div>
+
+            <small class="error-text" *ngIf="errorBusqueda">{{ errorBusqueda }}</small>
+
+            <div class="table-container-hm" *ngIf="resultadosBusqueda.length > 0">
+                <table class="table-hm">
+                    <thead>
+                        <tr>
+                            <th>Cédula</th>
+                            <th>NHCL</th>
+                            <th>Apellidos y Nombres</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (res of resultadosBusqueda; track $index) {
+                        <tr>
+                            <td>{{ res.cedula || res.CEDULA || '-' }}</td>
+                            <td><strong>{{ res.nhcl || res.NHCL || res.CD_NHCL }}</strong></td>
+                            <td class="text-left">
+                                {{ res.primerApellido || res.PRIMERAPELLIDO || res.AP_PRIMER }} {{ res.segundoApellido || res.SEGUNDOAPELLIDO || res.AP_SEGUNDO }} {{ res.primerNombre || res.PRIMERNOMBRE || res.NM_PRIMER }} {{ res.segundoNombre || res.SEGUNDONOMBRE || res.NM_SEGUNDO
+                                }}
+                            </td>
+                            <td>
+                                <button type="button" class="btn-pill btn-success btn-sm" (click)="seleccionarDependiente(res)">
+                                    Traer datos
+                                </button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal-footer-hm" style="display: flex; justify-content: flex-end; padding: 15px 25px; border-top: 1px solid #eaedf1;">
+            <button class="btn-pill btn-light" (click)="cerrarModalBusqueda()">Cerrar Ventana</button>
+        </div>
+    </div>
+</div>

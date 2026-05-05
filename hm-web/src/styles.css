@@ -1,0 +1,254 @@
+/* Importar estilos base de Toastr */
+
+@import 'ngx-toastr/toastr';
+
+/* src/styles.css */
+
+html,
+body {
+    /* Establece el zoom base para toda la app */
+    zoom: 90%;
+    /* Alternativa para navegadores que no soportan zoom (como Firefox antiguo) */
+    -moz-transform: scale(0.8);
+    -moz-transform-origin: 0 0;
+    /* Aseguramos que el fondo cubra todo el espacio tras el escalado */
+    background-color: #f4f7f6;
+    min-height: 125vh;
+    /* Compensamos el 80% para que el scroll se sienta natural */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background: #f7f9fb;
+}
+
+
+/* src/styles.css */
+
+.toast-confirm-custom {
+    cursor: default !important;
+    /* El cuerpo del toast ya no muestra el cursor de "mano" */
+}
+
+.btn-confirm-toast {
+    background: white;
+    color: #e67e22;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 700;
+    width: 100%;
+    cursor: pointer;
+    /* Solo el botón muestra el cursor de acción */
+    font-size: 0.85rem;
+    transition: transform 0.1s, background 0.2s;
+}
+
+.btn-confirm-toast:active {
+    transform: scale(0.95);
+    /* Feedback visual al presionar */
+    background: #eee;
+}
+
+
+/* Ajuste de posición para que no se pierda con el zoom */
+
+.toast-container {
+    zoom: 1.25;
+    /* Inverso del 0.8 para verse a tamaño real */
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0D9CDE;
+    border-radius: 10px;
+    border: 2px solid #f1f5f9;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0D9CDE;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background: #0D9CDE;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #0D9CDE #f1f5f9;
+}
+
+:root {
+    --hm-blue: #0D427C;
+    --hm-bg: #f7f9fb;
+    --hm-text: #2e3b4e;
+    --hm: #0D9CDE;
+}
+
+::ng-deep .custom-dialog-container .mat-mdc-dialog-surface {
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+::ng-deep .mat-mdc-dialog-container {
+    transition: opacity 0.2s ease-in-out;
+}
+
+::ng-deep .cdk-overlay-backdrop {
+    transition: opacity 0.2s ease-in-out;
+}
+
+.cdk-overlay-backdrop.cdk-overlay-dark-backdrop {
+    background-color: rgba(0, 0, 0, 0.48) !important;
+    backdrop-filter: blur(2px);
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.cdk-overlay-container {
+    z-index: 1000 !important;
+}
+
+.mat-mdc-dialog-container {
+    z-index: 1050 !important;
+}
+
+.cdk-overlay-pane .mat-mdc-snack-bar-container.hm-snackbar-error {
+    z-index: 6000 !important;
+    margin-top: 20px !important;
+}
+
+.mat-mdc-snack-bar-container.hm-snackbar-error .mdc-snackbar__surface {
+    background-color: #d32f2f !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 14px 18px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.mat-mdc-snack-bar-container.hm-snackbar-error .mdc-button__label {
+    color: #ffffff !important;
+    font-weight: bold !important;
+}
+
+.mat-mdc-snack-bar-container.hm-snackbar-error .mdc-snackbar__surface::before {
+    background: none !important;
+    opacity: 1 !important;
+}
+
+.ecg-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.ecg {
+    width: 260px;
+    height: 50px;
+}
+
+.ecg polyline {
+    fill: none;
+    stroke: #0D9CDE;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 260;
+    stroke-dashoffset: 260;
+    animation: ecg-move 1.8s linear infinite;
+}
+
+@keyframes ecg-move {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.loader-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #0D427C;
+    letter-spacing: 0.4px;
+}
+
+.loader-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.mat-mdc-tooltip.hm-tooltip {
+    background: #263238 !important;
+    color: #ffffff !important;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+/* --- AJUSTE PERSONALIZADO ESTILO HOSPITAL METROPOLITANO --- */
+
+.toast-container .ngx-toastr {
+    padding: 15px 15px 15px 55px !important;
+    border-radius: 12px !important;
+    /* Estilo píldora */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    opacity: 1 !important;
+}
+
+
+/* Color para Éxito (Verde corporativo suave) */
+
+.toast-success {
+    background-color: #27ae60 !important;
+}
+
+
+/* Color para Error (Rojo Hospital) */
+
+.toast-error {
+    background-color: #eb4d4b !important;
+}
+
+
+/* Color para Info (Azul Metropolitano) */
+
+.toast-info {
+    background-color: #008cd6 !important;
+}
+
+
+/* Ajuste del icono para que no se vea feo */
+
+.toast-container .ngx-toastr:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}

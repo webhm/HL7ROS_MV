@@ -1,0 +1,105 @@
+<div class="layout-hm">
+    <div class="header-hm">
+        <h2 class="title-hm">Configuración del Sistema</h2>
+        <p class="subtitle-hm">Gestión de catálogos, reglas de negocio y alertas automáticas.</p>
+    </div>
+
+    <div class="tabs-hm">
+        <button class="tab-pill" [class.active]="activeTab === 'parametros'" (click)="cambiarTab('parametros')">
+            ⚙️ Parámetros del Sistema
+        </button>
+        <button class="tab-pill" [class.active]="activeTab === 'notificaciones'" (click)="cambiarTab('notificaciones')">
+            🔔 Notificaciones & Alertas
+        </button>
+    </div>
+
+    <div class="tab-content-hm" *ngIf="activeTab === 'parametros'">
+        <div class="params-grid-hm">
+
+            <div class="card-hm param-card-hm">
+                <h4>Reglas de Edad</h4>
+                <div class="form-group-hm">
+                    <label>Edad Máxima Titular:</label>
+                    <input type="number" [(ngModel)]="configEdades.edad_max_titular" class="input-pill">
+                </div>
+                <div class="form-group-hm">
+                    <label>Edad Máxima Dependiente:</label>
+                    <input type="number" [(ngModel)]="configEdades.edad_max_dependiente" class="input-pill">
+                </div>
+                <button class="btn-pill btn-primary mt-3" (click)="guardarEdades()">Actualizar Reglas</button>
+            </div>
+
+            <div class="card-hm param-card-hm">
+                <h4>Catálogo de Planes</h4>
+                <div class="add-plan-group-hm">
+                    <input type="text" [(ngModel)]="nuevoPlanInput" placeholder="Nuevo Plan..." class="input-pill">
+                    <button class="btn-pill btn-info" (click)="agregarPlan()">Añadir</button>
+                </div>
+                <ul class="plan-list-hm">
+                    @for (plan of listaPlanes; track plan.CD_PLAN) {
+                    <li>
+                        <span>{{ plan.DESCRIPCION }}</span>
+                        <button class="btn-circle-sm btn-danger-text" (click)="eliminarPlan(plan.CD_PLAN)" title="Eliminar">✕</button>
+                    </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="card-hm param-card-hm">
+                <h4>Tipos de Asegurado</h4>
+                <div class="add-plan-group-hm">
+                    <input type="text" [(ngModel)]="nuevoTipoInput" placeholder="Nuevo Tipo..." class="input-pill">
+                    <button class="btn-pill btn-info" (click)="agregarTipo()">Añadir</button>
+                </div>
+                <ul class="plan-list-hm">
+                    @for (tipo of listaTipos; track tipo.PK_CODIGO) {
+                    <li>
+                        <span>{{ tipo.DESCRIPCION }}</span>
+                        <button class="btn-circle-sm btn-danger-text" (click)="eliminarTipo(tipo.PK_CODIGO)" title="Eliminar">✕</button>
+                    </li>
+                    }
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="tab-content-hm" *ngIf="activeTab === 'notificaciones'">
+        <div class="card-hm">
+            <h3 class="section-title-hm">Alertas de Vencimiento</h3>
+            <p class="desc-hm">Configura el envío automático de correos para asegurados próximos a cumplir el límite de edad o caducidad.</p>
+
+            <div class="notif-form-hm">
+                <div class="form-check-hm">
+                    <input type="checkbox" id="checkAlertas" [(ngModel)]="tempNotif.activa" class="check-hm">
+                    <label for="checkAlertas">Activar servicio de alertas automáticas</label>
+                </div>
+
+                <div class="form-row-hm">
+                    <div class="form-group-hm">
+                        <label>Días de Anticipación:</label>
+                        <input type="number" [(ngModel)]="tempNotif.diasAnticipacion" class="input-pill" [disabled]="!tempNotif.activa">
+                    </div>
+
+                    <div class="form-group-hm">
+                        <label>Frecuencia de Envío:</label>
+                        <select [(ngModel)]="tempNotif.frecuencia" class="input-pill select-pill" [disabled]="!tempNotif.activa">
+                            <option value="Diaria">Diaria (08:00 AM)</option>
+                            <option value="Semanal">Semanal (Lunes)</option>
+                            <option value="Mensual">Mensual (Primer día)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group-hm">
+                    <label>Correos Destinatarios (separar por comas):</label>
+                    <textarea [(ngModel)]="tempNotif.correosDestino" class="input-pill textarea-hm" rows="3" placeholder="ejemplo@hospital.com, admin@hospital.com" [disabled]="!tempNotif.activa"></textarea>
+                </div>
+
+                <button class="btn-pill btn-success mt-3" (click)="guardarNotificaciones()">
+                    💾 Guardar Configuración de Alertas
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
