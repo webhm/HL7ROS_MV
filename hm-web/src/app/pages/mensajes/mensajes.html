@@ -1,0 +1,91 @@
+<div class="hm-panel">
+    <div class="hm-panel-header">
+        <h2>Monitor de Mensajes HL7</h2>
+        <button (click)="cargarMensajes()" class="btn-primary">Actualizar Cola</button>
+    </div>
+
+    <div class="hm-filters">
+        <div class="filter-group">
+            <label>Fecha Ingreso:</label>
+            <input type="date" [(ngModel)]="filtros.fechaIngreso" (change)="aplicarFiltros()">
+        </div>
+
+        <div class="filter-group">
+            <label>Estado:</label>
+            <select [(ngModel)]="filtros.estado" (change)="aplicarFiltros()">
+                <option value="TODOS">TODOS</option>
+                <option value="PROCESADO">PROCESADO</option>
+                <option value="ERROR">ERROR</option>
+                <option value="PENDIENTE">PENDIENTE</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label>Tipo Mensaje:</label>
+            <select [(ngModel)]="filtros.tipo" (change)="aplicarFiltros()">
+                <option value="TODOS">TODOS</option>
+                <option value="SINCRONIZACION">SINCRONIZACIÓN</option>
+                <option value="DIRECTO">DIRECTO</option>
+            </select>
+        </div>
+
+        <div class="spacer"></div>
+        <button (click)="limpiarFiltros()" class="btn-secondary">Limpiar Filtros</button>
+    </div>
+
+    <div class="hm-table-container">
+
+        <div *ngIf="cargando" class="loading-state">
+            Cargando cola de mensajes...
+        </div>
+
+        <table *ngIf="!cargando" class="hm-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>PACIENTE / DETALLE JSON</th>
+                    <th class="text-center">TIPO</th>
+                    <th class="text-center">INGRESO</th>
+                    <th class="text-center">ESTADO</th>
+                    <th class="text-center">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of mensajesFiltrados">
+                    <td class="font-bold text-dark">{{ item.id }}</td>
+
+                    <td class="truncate" [title]="item.mensaje">
+                        {{ item.mensaje }}
+                    </td>
+
+                    <td class="text-center">
+                        <span class="badge" [ngClass]="{'badge-sync': item.tipo === 'Sincronizacion', 'badge-direct': item.tipo === 'Directo'}">
+                            {{ item.tipo }}
+                        </span>
+                    </td>
+
+                    <td class="text-center">{{ item.fecha }}</td>
+
+                    <td class="text-center">
+                        <span *ngIf="item.estado === 'Procesado'" class="status-ok">Procesado</span>
+                        <span *ngIf="item.estado === 'Error'" class="status-error" [title]="item.logError || 'Error desconocido'">
+                            Error ({{ item.intentos }} intentos)
+                        </span>
+                        <span *ngIf="item.estado === 'Pendiente'" class="status-pending">Pendiente</span>
+                    </td>
+
+                    <td class="actions-cell">
+                        <button class="btn-primary btn-sm">Detalle JSON</button>
+                        <button *ngIf="item.estado === 'Error'" (click)="reprocesarMensaje(item.id)" class="btn-danger btn-sm">Reprocesar</button>
+                    </td>
+                </tr>
+
+                <tr *ngIf="mensajesFiltrados.length === 0">
+                    <td colspan="6" class="empty-state">
+                        No se encontraron mensajes con los filtros aplicados.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

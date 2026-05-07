@@ -1,0 +1,173 @@
+.hm-panel {
+    background-color: #ffffff !important;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    margin-top: 24px;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+
+.hm-panel-header {
+    padding: 24px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.hm-panel-header h2 {
+    color: #203b54 !important;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+/* Barra de búsqueda gris */
+
+.hm-search-bar {
+    background-color: #f9fafb !important;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.search-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.search-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #203b54;
+}
+
+.search-group input {
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    font-size: 14px;
+    width: 250px;
+    outline: none;
+}
+
+.search-group input:focus {
+    border-color: #0082c8 !important;
+    box-shadow: 0 0 0 1px #0082c8 !important;
+}
+
+
+/* Botones */
+
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 50px !important;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-primary {
+    background-color: #0082c8 !important;
+    color: white !important;
+    padding: 10px 24px;
+}
+
+.btn-secondary {
+    background-color: #e5e7eb !important;
+    color: #4b5563 !important;
+    padding: 10px 24px;
+}
+
+
+/* Tarjeta de Paciente */
+
+.hm-content {
+    padding: 30px;
+}
+
+.paciente-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #0082c8;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.nhcl-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+
+.data-item label {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.data-item p {
+    margin: 0;
+    font-size: 15px;
+    color: #203b54;
+    font-weight: 500;
+}
+
+.card-footer {
+    padding: 20px;
+    border-top: 1px solid #f3f4f6;
+    text-align: center;
+}
+
+.alert-info {
+    background-color: #eff6ff;
+    color: #1e40af;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.btn-send-hl7 {
+    background-color: #0082c8 !important;
+    color: white !important;
+    padding: 12px 40px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.btn-send-hl7:disabled {
+    background-color: #9ca3af !important;
+    cursor: not-allowed;
+}
+
+.info-message.error {
+    color: #ef4444;
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+}

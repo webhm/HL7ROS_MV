@@ -1,0 +1,273 @@
+/* Contenedor Principal */
+
+.hm-panel {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    margin-top: 24px;
+    font-family: inherit;
+}
+
+
+/* Cabecera */
+
+.hm-panel-header {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.hm-panel-header h2 {
+    color: #203b54;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+/* Botones Generales */
+
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: #0082c8;
+    color: #ffffff;
+    padding: 8px 20px;
+    font-size: 14px;
+}
+
+.btn-primary:hover {
+    background-color: #006b9f;
+}
+
+.btn-secondary {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 6px 20px;
+    font-size: 14px;
+}
+
+.btn-secondary:hover {
+    background-color: #d1d5db;
+}
+
+.btn-danger {
+    background-color: #e13a4b;
+    color: #ffffff;
+    padding: 8px 20px;
+    font-size: 14px;
+}
+
+.btn-danger:hover {
+    background-color: #c82d3d;
+}
+
+.btn-sm {
+    padding: 6px 16px;
+    font-size: 11px;
+}
+
+
+/* Barra de Filtros */
+
+.hm-filters {
+    background-color: #f9fafb;
+    padding: 16px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #203b54;
+}
+
+.filter-group input,
+.filter-group select {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    width: 160px;
+    outline: none;
+    color: #374151;
+    background-color: #ffffff;
+    transition: border-color 0.2s ease;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #0082c8;
+    box-shadow: 0 0 0 1px #0082c8;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+
+/* Contenedor de la Tabla */
+
+.hm-table-container {
+    overflow-x: auto;
+    padding: 16px 24px;
+}
+
+.loading-state,
+.empty-state {
+    text-align: center;
+    padding: 32px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+
+/* Estilos de la Tabla */
+
+.hm-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 14px;
+}
+
+.hm-table thead {
+    background-color: #0082c8;
+    color: #ffffff;
+}
+
+.hm-table th {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+}
+
+.hm-table th:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.hm-table th:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.hm-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.hm-table tbody tr td {
+    border-bottom: 1px solid #f3f4f6;
+    padding: 16px;
+    color: #4b5563;
+    vertical-align: middle;
+}
+
+.hm-table tbody tr:hover td {
+    background-color: #f9fafb;
+}
+
+
+/* Utilidades de Texto para la Tabla */
+
+.text-center {
+    text-align: center;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+
+.text-dark {
+    color: #203b54;
+}
+
+.truncate {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* Badges de Tipo de Mensaje */
+
+.badge {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    background-color: #ffffff;
+}
+
+.badge-sync {
+    color: #0082c8;
+    border-color: #0082c8;
+}
+
+.badge-direct {
+    color: #a855f7;
+    border-color: #a855f7;
+}
+
+
+/* Estados de Procesamiento */
+
+.status-ok {
+    color: #22c55e;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.status-error {
+    color: #ef4444;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #eab308;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+
+/* Celda de Acciones */
+
+.actions-cell {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}

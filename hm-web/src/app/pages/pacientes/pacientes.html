@@ -1,0 +1,60 @@
+<div class="hm-panel">
+    <div class="hm-panel-header">
+        <h2>Búsqueda y Envío de Pacientes (A Demanda)</h2>
+    </div>
+
+    <div class="hm-search-bar">
+        <div class="search-group">
+            <label>Cédula del Paciente:</label>
+            <input type="text" [(ngModel)]="cedulaBusqueda" placeholder="Ej: 1712345678" (keyup.enter)="buscar()">
+        </div>
+        <button (click)="buscar()" class="btn-primary" [disabled]="buscando">
+            {{ buscando ? 'Buscando...' : 'Buscar Paciente' }}
+        </button>
+        <button (click)="limpiar()" class="btn-secondary">Limpiar</button>
+    </div>
+
+    <div class="hm-content">
+        <div *ngIf="mensajeFeedback" class="info-message error">
+            {{ mensajeFeedback }}
+        </div>
+
+        <div *ngIf="pacienteEncontrado" class="paciente-card">
+            <div class="card-header">
+                <h3>Datos del Paciente Encontrado</h3>
+                <span class="nhcl-badge">NHCL: {{ pacienteEncontrado.cdPaciente }}</span>
+            </div>
+
+            <div class="card-body">
+                <div class="data-grid">
+                    <div class="data-item">
+                        <label>Nombres y Apellidos:</label>
+                        <p>{{ pacienteEncontrado.nombresPaciente }} {{ pacienteEncontrado.apellidosPaciente }}</p>
+                    </div>
+                    <div class="data-item">
+                        <label>Identificación:</label>
+                        <p>{{ pacienteEncontrado.cedulaPaciente }}</p>
+                    </div>
+                    <div class="data-item">
+                        <label>Fecha de Nacimiento:</label>
+                        <p>{{ pacienteEncontrado.fechaNacimiento | date:'dd/MM/yyyy' }}</p>
+                    </div>
+                    <div class="data-item">
+                        <label>Género:</label>
+                        <p>{{ pacienteEncontrado.sexo === 'M' ? 'Masculino' : 'Femenino' }}</p>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="alert-info">
+                        Al presionar el botón, se generará y enviará un mensaje HL7 (ADT^A08) de forma inmediata.
+                    </div>
+                    <button (click)="enviarHl7()" class="btn-send-hl7" [disabled]="enviando">
+                        <span *ngIf="!enviando">Enviar HL7 a demanda</span>
+                        <span *ngIf="enviando">Procesando envío...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
