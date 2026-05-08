@@ -5,54 +5,65 @@
 
     <div class="hm-search-bar">
         <div class="search-group">
-            <label>Cédula del Paciente:</label>
-            <input type="text" [(ngModel)]="cedulaBusqueda" placeholder="Ej: 1712345678" (keyup.enter)="buscar()">
+            <label>Cédula o NHCL:</label>
+            <input type="text" [(ngModel)]="cedulaBusqueda" placeholder="Ej: 1712345678" (keyup.enter)="buscar()" [disabled]="buscando || enviando">
         </div>
-        <button (click)="buscar()" class="btn-primary" [disabled]="buscando">
+        <button (click)="buscar()" class="btn-primary" [disabled]="buscando || enviando || !cedulaBusqueda">
             {{ buscando ? 'Buscando...' : 'Buscar Paciente' }}
         </button>
-        <button (click)="limpiar()" class="btn-secondary">Limpiar</button>
+        <div class="spacer"></div>
+        <button (click)="limpiar()" class="btn-secondary" [disabled]="buscando || enviando">Limpiar Pantalla</button>
     </div>
 
     <div class="hm-content">
-        <div *ngIf="mensajeFeedback" class="info-message error">
+        <div *ngIf="mensajeFeedback" class="alert-box" [ngClass]="tipoAlerta">
             {{ mensajeFeedback }}
         </div>
 
         <div *ngIf="pacienteEncontrado" class="paciente-card">
             <div class="card-header">
-                <h3>Datos del Paciente Encontrado</h3>
-                <span class="nhcl-badge">NHCL: {{ pacienteEncontrado.cdPaciente }}</span>
+                <h3>Detalle Demográfico (HIS)</h3>
+                <span class="nhcl-badge">NHCL: {{ pacienteEncontrado?.cdPaciente }}</span>
             </div>
 
             <div class="card-body">
                 <div class="data-grid">
                     <div class="data-item">
                         <label>Nombres y Apellidos:</label>
-                        <p>{{ pacienteEncontrado.nombresPaciente }} {{ pacienteEncontrado.apellidosPaciente }}</p>
+                        <p>{{ pacienteEncontrado?.nombresPaciente }} {{ pacienteEncontrado?.apellidosPaciente }}</p>
                     </div>
                     <div class="data-item">
                         <label>Identificación:</label>
-                        <p>{{ pacienteEncontrado.cedulaPaciente }}</p>
+                        <p>{{ pacienteEncontrado?.cedulaPaciente }}</p>
                     </div>
                     <div class="data-item">
                         <label>Fecha de Nacimiento:</label>
-                        <p>{{ pacienteEncontrado.fechaNacimiento | date:'dd/MM/yyyy' }}</p>
+                        <p>{{ pacienteEncontrado?.fechaNacimiento || 'No registrada' }}</p>
                     </div>
                     <div class="data-item">
                         <label>Género:</label>
-                        <p>{{ pacienteEncontrado.sexo === 'M' ? 'Masculino' : 'Femenino' }}</p>
+                        <p>{{ pacienteEncontrado?.sexo === 'M' ? 'Masculino' : (pacienteEncontrado?.sexo === 'F' ? 'Femenino' : pacienteEncontrado?.sexo) }}</p>
+                    </div>
+                    <div class="data-item">
+                        <label>Celular:</label>
+                        <p>{{ pacienteEncontrado?.celular || 'No registrado' }}</p>
+                    </div>
+                    <div class="data-item">
+                        <label>Dirección:</label>
+                        <p class="truncate-text" [title]="pacienteEncontrado?.direccion">{{ pacienteEncontrado?.direccion || 'No registrada' }}</p>
                     </div>
                 </div>
 
                 <div class="card-footer">
-                    <div class="alert-info">
-                        Al presionar el botón, se generará y enviará un mensaje HL7 (ADT^A08) de forma inmediata.
+                    <div class="action-wrapper">
+                        <div class="info-text">
+                            <strong>Acción a Demanda:</strong> Al presionar el botón, se forzará la creación de un segmento PID y se insertará un mensaje ADT en la cola de integración hacia el RIS.
+                        </div>
+                        <button (click)="enviarHl7()" class="btn-send-hl7" [disabled]="enviando || buscando">
+                            <span *ngIf="!enviando">Generar y Enviar HL7</span>
+                            <span *ngIf="enviando">Enviando al API...</span>
+                        </button>
                     </div>
-                    <button (click)="enviarHl7()" class="btn-send-hl7" [disabled]="enviando">
-                        <span *ngIf="!enviando">Enviar HL7 a demanda</span>
-                        <span *ngIf="enviando">Procesando envío...</span>
-                    </button>
                 </div>
             </div>
         </div>

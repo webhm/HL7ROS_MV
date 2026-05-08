@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IntegracionHl7Service } from '../../services/integracion-hl7';
@@ -20,16 +20,21 @@ export interface ElementoColaVista {
   templateUrl: './mensajes.html',
   styleUrls: ['./mensajes.css']
 })
-export class MensajesComponent implements OnInit {
+export class MensajesComponent implements OnInit, OnDestroy {
   private integracionService = inject(IntegracionHl7Service);
+  private cdr = inject(ChangeDetectorRef); 
 
   mensajes: ElementoColaVista[] = [];
   mensajesFiltrados: ElementoColaVista[] = [];
   cargando = false;
+  
+  // Variables para la Auto-Actualización
+  autoActualizar = false;
+  private intervaloRef: any;
 
   filtros = {
     fechaIngreso: '',
-    estado: 'TODOS',
+    estado: 'PENDIENTE',
     tipo: 'TODOS'
   };
 
@@ -37,102 +42,123 @@ export class MensajesComponent implements OnInit {
     this.cargarMensajes();
   }
 
-  cargarMensajes(): void {
-    this.cargando = true;
+  // Súper importante: Limpiar el intervalo al salir de la pantalla
+  ngOnDestroy(): void {
+    this.detenerAutoActualizacion();
+  }
+
+  // --- LÓGICA DE AUTO-ACTUALIZACIÓN ---
+  toggleAutoActualizacion(): void {
+    this.autoActualizar = !this.autoActualizar;
     
-    // Usamos 'any' aquí temporalmente para que TypeScript no bloquee el mapeo robusto
-    this.integracionService.verCola().subscribe({
-      next: (res: any) => {
-        // 1. Imprimimos en consola para depuración
-        console.log('Respuesta cruda de la cola de mensajes (API):', res);
+    if (this.autoActualizar) {
+      // 5 minutos = 300,000 milisegundos
+      this.intervaloRef = setInterval(() => {
+        console.log('[DEBUG] Ejecutando auto-actualización programada...');
+        this.cargarMensajes();
+      }, 60000);
+    } else {
+      this.detenerAutoActualizacion();
+    }
+    
+    this.cdr.detectChanges();
+  }
 
-        // 2. Extracción segura del Arreglo (Por si el backend lo envuelve en { data: [...] } o similar)
-        let datosApi: any[] = [];
-        if (Array.isArray(res)) {
-          datosApi = res;
-        } else if (res && Array.isArray(res.data)) {
-          datosApi = res.data;
-        } else if (res && Array.isArray(res.items)) {
-          datosApi = res.items;
-        } else if (res && typeof res === 'object') {
-          datosApi = [res]; // Por si por error devuelve solo un objeto
-        }
+  private detenerAutoActualizacion(): void {
+    if (this.intervaloRef) {
+      clearInterval(this.intervaloRef);
+      this.intervaloRef = null;
+    }
+  }
+  // ------------------------------------
 
-        // 3. MAPEO ROBUSTO a la vista
-        this.mensajes = datosApi.map(apiItem => {
-          let nombrePaciente = 'Paciente Desconocido';
-          let origenAtencion = '';
-          
-          // Parseo seguro del JSON (Evita que la app se rompa si el JSON viene malformado)
+  cargarMensajes(): void {
+    try {
+      this.cargando = true;
+      this.cdr.detectChanges(); 
+
+      this.integracionService.verCola().subscribe({
+        next: (res: any) => {
+          this.cargando = false; 
+          this.cdr.detectChanges(); 
+
           try {
-            if (apiItem.payloadJson || apiItem.PAYLOAD_JSON) {
-              const payloadCrudo = apiItem.payloadJson || apiItem.PAYLOAD_JSON;
-              // Si el payload ya es un objeto, no lo parseamos; si es string, lo parseamos
-              const payload = typeof payloadCrudo === 'string' ? JSON.parse(payloadCrudo) : payloadCrudo;
+            const datosRaw = Array.isArray(res) ? res : (res?.data || res?.items || []);
+            
+            this.mensajes = datosRaw.map((item: any) => {
+              let nombre = 'Paciente Desconocido';
+              let origen = '';
               
-              nombrePaciente = payload.NM_PACIENTE || payload.NOMBRES || payload.nombresPaciente || 'Sin Nombre';
-              origenAtencion = payload.DS_ORI_ATE ? `(${payload.DS_ORI_ATE})` : '';
-            }
+              if (item && (item.payloadJson || item.PAYLOAD_JSON)) {
+                const pStr = item.payloadJson || item.PAYLOAD_JSON;
+                const payload = typeof pStr === 'string' ? JSON.parse(pStr) : pStr;
+                nombre = payload.NM_PACIENTE || payload.nombre || 'Sin nombre';
+                origen = payload.DS_ORI_ATE ? `(${payload.DS_ORI_ATE})` : '';
+              }
+
+              const estadoCrudo = String(item?.estado || item?.ESTADO || 'Pendiente');
+
+              return {
+                id: item?.idMensaje || item?.ID_MENSAJE || item?.id || 0,
+                mensaje: `NHCL: ${item?.cdPaciente || 'N/A'} - ${nombre} ${origen}`,
+                tipo: item?.tipo || 'Sincronizacion',
+                fecha: (item?.fechaCreacion || '').replace('T', ' ').substring(0, 16),
+                estado: estadoCrudo.charAt(0).toUpperCase() + estadoCrudo.slice(1).toLowerCase(),
+                intentos: item?.intentos || 0,
+                logError: item?.logError || null
+              };
+            });
+
+            this.aplicarFiltros();
+
           } catch (e) {
-            console.warn(`No se pudo leer el JSON del id ${apiItem.idMensaje || apiItem.id}`, e);
+            console.error('[DEBUG] Error interno al mapear los datos del JSON:', e);
           }
-
-          // Fecha segura
-          const fechaCruda = apiItem.fechaCreacion || apiItem.FECHA_CREACION || '';
-          const fechaFormateada = fechaCruda ? String(fechaCruda).replace('T', ' ').substring(0, 19) : '';
-
-          // Estado seguro (Si viene null o undefined, ponemos 'Pendiente')
-          const estadoCrudo = String(apiItem.estado || apiItem.ESTADO || 'Pendiente');
-          const estadoNormalizado = estadoCrudo.charAt(0).toUpperCase() + estadoCrudo.slice(1).toLowerCase();
-
-          return {
-            id: apiItem.idMensaje || apiItem.ID_MENSAJE || apiItem.id || 'N/A',
-            mensaje: `NHCL: ${apiItem.cdPaciente || apiItem.CD_PACIENTE || 'N/A'} - ${nombrePaciente} ${origenAtencion}`,
-            tipo: apiItem.tipo || 'Sincronizacion',
-            fecha: fechaFormateada,
-            estado: estadoNormalizado, 
-            intentos: apiItem.intentos || apiItem.INTENTOS || 0,
-            logError: apiItem.logError || apiItem.LOG_ERROR || null
-          };
-        });
-
-        console.log('Mensajes listos para mostrar en tabla:', this.mensajes);
-        this.aplicarFiltros();
-        this.cargando = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar la cola de mensajes:', err);
-        this.cargando = false;
-      }
-    });
+        },
+        error: (err) => {
+          console.error('[DEBUG] Error HTTP al conectar con el servidor:', err);
+          this.cargando = false;
+          this.cdr.detectChanges(); 
+        },
+        complete: () => {
+          this.cargando = false;
+          this.cdr.detectChanges();
+        }
+      });
+    } catch (errorCritico) {
+      console.error('[DEBUG] Error crítico antes de hacer la petición:', errorCritico);
+      this.cargando = false;
+      this.cdr.detectChanges();
+    }
   }
 
   aplicarFiltros(): void {
-    // Verificación de seguridad extra: asegura que no falle si "mensajes" es undefined
     if (!this.mensajes) return;
-
+    
+    const busquedaEstado = this.filtros.estado.toUpperCase();
+    
     this.mensajesFiltrados = this.mensajes.filter(m => {
-      // Uso de || '' para evitar errores de "Cannot read properties of undefined (reading 'toUpperCase')"
-      const estadoMensaje = (m.estado || '').toUpperCase();
-      const tipoMensaje = (m.tipo || '').toUpperCase();
-      const fechaMensaje = (m.fecha || '');
-      
-      const cumpleEstado = this.filtros.estado === 'TODOS' || estadoMensaje === this.filtros.estado.toUpperCase();
-      const cumpleTipo = this.filtros.tipo === 'TODOS' || tipoMensaje === this.filtros.tipo.toUpperCase();
-      const cumpleFecha = !this.filtros.fechaIngreso || fechaMensaje.includes(this.filtros.fechaIngreso);
+      const estadoMsg = (m.estado || '').toUpperCase();
+      const tipoMsg = (m.tipo || '').toUpperCase();
+      const fechaMsg = m.fecha || '';
 
+      const cumpleEstado = busquedaEstado === 'TODOS' || estadoMsg === busquedaEstado;
+      const cumpleTipo = this.filtros.tipo === 'TODOS' || tipoMsg === this.filtros.tipo.toUpperCase();
+      const cumpleFecha = !this.filtros.fechaIngreso || fechaMsg.includes(this.filtros.fechaIngreso);
+      
       return cumpleEstado && cumpleTipo && cumpleFecha;
     });
+
+    this.cdr.detectChanges(); 
   }
 
   limpiarFiltros(): void {
-    this.filtros = { fechaIngreso: '', estado: 'TODOS', tipo: 'TODOS' };
+    this.filtros = { fechaIngreso: '', estado: 'PENDIENTE', tipo: 'TODOS' };
     this.aplicarFiltros();
   }
 
   reprocesarMensaje(id: any): void {
-    console.log(`Enviando a reprocesar ID: ${id}`);
-    // Descomentar cuando uses el endpoint:
+    console.log(`[DEBUG] Reprocesando mensaje ID: ${id}`);
     // this.integracionService.reprocesarErrores().subscribe(() => this.cargarMensajes());
   }
 }

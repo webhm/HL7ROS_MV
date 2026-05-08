@@ -1,7 +1,16 @@
 <div class="hm-panel">
     <div class="hm-panel-header">
         <h2>Monitor de Mensajes HL7</h2>
-        <button (click)="cargarMensajes()" class="btn-primary">Actualizar Cola</button>
+
+        <div class="header-actions">
+            <button (click)="toggleAutoActualizacion()" [ngClass]="autoActualizar ? 'btn-success' : 'btn-outline'" title="Actualizar tabla automáticamente cada 5 minutos">
+                Auto-Actualizar: {{ autoActualizar ? 'ON' : 'OFF' }}
+            </button>
+
+            <button (click)="cargarMensajes()" class="btn-primary" [disabled]="cargando">
+                {{ cargando ? 'Consultando...' : 'Actualizar Cola' }}
+            </button>
+        </div>
     </div>
 
     <div class="hm-filters">
@@ -30,13 +39,14 @@
         </div>
 
         <div class="spacer"></div>
-        <button (click)="limpiarFiltros()" class="btn-secondary">Limpiar Filtros</button>
+        <button (click)="limpiarFiltros()" class="btn-secondary" [disabled]="cargando">Limpiar Filtros</button>
     </div>
 
     <div class="hm-table-container">
 
         <div *ngIf="cargando" class="loading-state">
-            Cargando cola de mensajes...
+            <div class="spinner"></div>
+            <p>Consultando base de datos...</p>
         </div>
 
         <table *ngIf="!cargando" class="hm-table">
@@ -47,42 +57,42 @@
                     <th class="text-center">TIPO</th>
                     <th class="text-center">INGRESO</th>
                     <th class="text-center">ESTADO</th>
-                    <th class="text-center">ACCIONES</th>
+                    <!-- <th class="text-center">ACCIONES</th> -->
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let item of mensajesFiltrados">
-                    <td class="font-bold text-dark">{{ item.id }}</td>
+                    <td class="font-bold text-dark">{{ item?.id }}</td>
 
-                    <td class="truncate" [title]="item.mensaje">
-                        {{ item.mensaje }}
+                    <td class="truncate" [title]="item?.mensaje">
+                        {{ item?.mensaje }}
                     </td>
 
                     <td class="text-center">
-                        <span class="badge" [ngClass]="{'badge-sync': item.tipo === 'Sincronizacion', 'badge-direct': item.tipo === 'Directo'}">
-                            {{ item.tipo }}
+                        <span class="badge" [ngClass]="{'badge-sync': item?.tipo === 'Sincronizacion', 'badge-direct': item?.tipo === 'Directo'}">
+                            {{ item?.tipo }}
                         </span>
                     </td>
 
-                    <td class="text-center">{{ item.fecha }}</td>
+                    <td class="text-center text-xs">{{ item?.fecha }}</td>
 
                     <td class="text-center">
-                        <span *ngIf="item.estado === 'Procesado'" class="status-ok">Procesado</span>
-                        <span *ngIf="item.estado === 'Error'" class="status-error" [title]="item.logError || 'Error desconocido'">
-                            Error ({{ item.intentos }} intentos)
+                        <span *ngIf="item?.estado === 'Procesado' || item?.estado === 'Ok'" class="status-ok">Procesado</span>
+                        <span *ngIf="item?.estado === 'Error'" class="status-error" [title]="item?.logError || 'Error desconocido'">
+                            Error ({{ item?.intentos }} intentos)
                         </span>
-                        <span *ngIf="item.estado === 'Pendiente'" class="status-pending">Pendiente</span>
+                        <span *ngIf="item?.estado === 'Pendiente'" class="status-pending">Pendiente</span>
                     </td>
 
-                    <td class="actions-cell">
-                        <button class="btn-primary btn-sm">Detalle JSON</button>
-                        <button *ngIf="item.estado === 'Error'" (click)="reprocesarMensaje(item.id)" class="btn-danger btn-sm">Reprocesar</button>
-                    </td>
+                    <!--    <td class="actions-cell">
+                        <button class="btn-primary btn-sm">Ver JSON</button>
+                        <button *ngIf="item?.estado === 'Error'" (click)="reprocesarMensaje(item.id)" class="btn-danger btn-sm">Reprocesar</button>
+                    </td> -->
                 </tr>
 
-                <tr *ngIf="mensajesFiltrados.length === 0">
+                <tr *ngIf="mensajesFiltrados?.length === 0">
                     <td colspan="6" class="empty-state">
-                        No se encontraron mensajes con los filtros aplicados.
+                        No se encontraron mensajes que coincidan con los filtros.
                     </td>
                 </tr>
             </tbody>
