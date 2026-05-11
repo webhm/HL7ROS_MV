@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.tudominio.com',
+  apiUrl: 'https://apps-web.hmetro.med.ec/hl7-ris',
 };

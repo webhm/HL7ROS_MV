@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5156',
+  apiUrl: 'https://apps-web.hmetro.med.ec/hl7-ris',
 };
