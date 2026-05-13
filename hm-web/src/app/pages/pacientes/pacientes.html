@@ -57,7 +57,7 @@
                 <div class="card-footer">
                     <div class="action-wrapper">
                         <div class="info-text">
-                            <strong>Acción a Demanda:</strong> Al presionar el botón, se forzará la creación de un segmento PID y se insertará un mensaje ADT en la cola de integración hacia el RIS.
+                            <strong>Acción a Demanda:</strong> Al presionar el botón, se forzará la creación de un segmento PID y se enviará en la integración hacia el RIS.
                         </div>
                         <button (click)="enviarHl7()" class="btn-send-hl7" [disabled]="enviando || buscando">
                             <span *ngIf="!enviando">Generar y Enviar HL7</span>

@@ -86,13 +86,34 @@ export class PacientesComponent {
     this.mensajeFeedback = '';
     this.cdr.detectChanges();
 
+    this.integracionService.enviarMensajeDemanda(this.pacienteEncontrado).subscribe({
+        next: (res) => {
+          console.log('[DEBUG] Respuesta de envío HL7:', res);
+          this.enviando = false;
+          this.mostrarAlerta('¡Mensaje HL7 enviado exitosamente a la cola del RIS!', 'success');
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('[DEBUG] Error al enviar HL7:', err);
+          this.enviando = false;
+          this.mostrarAlerta('Error al intentar enviar el mensaje HL7.', 'error');
+          this.cdr.detectChanges();
+        },
+        complete: () => {
+          this.enviando = false;
+          this.cdr.detectChanges();
+        }
+    });
+
     // RESPUESTA ESTÁTICA SIMULADA
     // Usamos setTimeout para simular que el API tarda 1 segundo en responder
+    /*
     setTimeout(() => {
       this.enviando = false;
       this.mostrarAlerta('¡Mensaje HL7 enviado correctamente al RIS!', 'success');
       this.cdr.detectChanges();
     }, 1000);
+    */
   }
 
   limpiar(): void {

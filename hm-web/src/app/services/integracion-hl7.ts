@@ -63,6 +63,6 @@ export class IntegracionHl7Service {
   // Envía el mensaje HL7 a demanda (HIS -> RIS)
   enviarMensajeDemanda(paciente: PacienteHis): Observable<any> {
     // Este usa el endpoint de "probar-envio-directo" que vimos en el Swagger
-    return this.http.post(`${this.apiUrl}/probar-envio-directo`, paciente);
+    return this.http.post(`${this.apiUrl}/probar-escritura-red`, paciente);
   }
 }
