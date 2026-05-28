@@ -11,7 +11,7 @@ import { ConfiguracionComponent } from './pages/configuracion/configuracion';
 import { PacientesComponent } from './pages/pacientes/pacientes';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'mensajes', pathMatch: 'full' },
   { path: 'home', component: HomeComponent, title: 'Inicio', canActivate: [perfilGuard] },
   { path: 'mensajes', component: MensajesComponent, title: 'Mensajes HL7', canActivate: [perfilGuard] },
   { path: 'pacientes', component: PacientesComponent, title: 'Buscar Pacientes', canActivate: [perfilGuard] },
