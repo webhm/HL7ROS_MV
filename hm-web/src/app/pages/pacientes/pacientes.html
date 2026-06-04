@@ -1,11 +1,11 @@
 <div class="hm-panel">
     <div class="hm-panel-header">
-        <h2>Búsqueda y Envío de Pacientes (A Demanda)</h2>
+        <h2>Búsqueda y Envío de Pacientes a RIS</h2>
     </div>
 
     <div class="hm-search-bar">
         <div class="search-group">
-            <label>Cédula o NHCL:</label>
+            <label>Cédula:</label>
             <input type="text" [(ngModel)]="cedulaBusqueda" placeholder="Ej: 1712345678" (keyup.enter)="buscar()" [disabled]="buscando || enviando">
         </div>
         <button (click)="buscar()" class="btn-primary" [disabled]="buscando || enviando || !cedulaBusqueda">
@@ -22,7 +22,7 @@
 
         <div *ngIf="pacienteEncontrado" class="paciente-card">
             <div class="card-header">
-                <h3>Detalle Demográfico (HIS)</h3>
+                <h3>Detalle Demográfico del Paciente</h3>
                 <span class="nhcl-badge">NHCL: {{ pacienteEncontrado?.cdPaciente }}</span>
             </div>
 
@@ -44,11 +44,11 @@
                         <label>Género:</label>
                         <p>{{ pacienteEncontrado?.sexo === 'M' ? 'Masculino' : (pacienteEncontrado?.sexo === 'F' ? 'Femenino' : pacienteEncontrado?.sexo) }}</p>
                     </div>
-                    <div class="data-item">
+                    <div class="data-item" style="display: none;">
                         <label>Celular:</label>
                         <p>{{ pacienteEncontrado?.celular || 'No registrado' }}</p>
                     </div>
-                    <div class="data-item">
+                    <div class="data-item" style="display: none;">
                         <label>Dirección:</label>
                         <p class="truncate-text" [title]="pacienteEncontrado?.direccion">{{ pacienteEncontrado?.direccion || 'No registrada' }}</p>
                     </div>
@@ -56,11 +56,11 @@
 
                 <div class="card-footer">
                     <div class="action-wrapper">
-                        <div class="info-text">
+                        <div class="info-text" style="display:none;">
                             <strong>Acción a Demanda:</strong> Al presionar el botón, se forzará la creación de un segmento PID y se enviará en la integración hacia el RIS.
                         </div>
                         <button (click)="enviarHl7()" class="btn-send-hl7" [disabled]="enviando || buscando">
-                            <span *ngIf="!enviando">Generar y Enviar HL7</span>
+                            <span *ngIf="!enviando">Enviar HC al RIS</span>
                             <span *ngIf="enviando">Enviando al API...</span>
                         </button>
                     </div>
