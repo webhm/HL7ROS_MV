@@ -42,8 +42,7 @@ export class PacientesComponent {
             if (data && (data.cedulaPaciente || data.CD_PACIENTE || data.cdPaciente || data.IDENTIFICACION)) {
               
               const fechaCruda = data.fechaNacimiento || data.DT_NASCIMENTO || data.fecha || data.FECHA_NACIMIENTO || '';
-              // Reemplazamos la lógica anterior por nuestro nuevo método formateador
-              const fechaLimpia = this.limpiarFormatoFecha(fechaCruda);
+              const fechaLimpia = typeof fechaCruda === 'string' ? fechaCruda.split('T')[0] : '';
 
               this.pacienteEncontrado = {
                 cdPaciente: data.cdPaciente || data.CD_PACIENTE || data.cdAtencion || 'N/A',
@@ -105,6 +104,16 @@ export class PacientesComponent {
           this.cdr.detectChanges();
         }
     });
+
+    // RESPUESTA ESTÁTICA SIMULADA
+    // Usamos setTimeout para simular que el API tarda 1 segundo en responder
+    /*
+    setTimeout(() => {
+      this.enviando = false;
+      this.mostrarAlerta('¡Mensaje HL7 enviado correctamente al RIS!', 'success');
+      this.cdr.detectChanges();
+    }, 1000);
+    */
   }
 
   limpiar(): void {
@@ -117,43 +126,5 @@ export class PacientesComponent {
   private mostrarAlerta(mensaje: string, tipo: 'info' | 'error' | 'success'): void {
     this.mensajeFeedback = mensaje;
     this.tipoAlerta = tipo;
-  }
-
-  /**
-   * Procesa la fecha cruda del HIS y la formatea a DD/MM/YYYY.
-   * Maneja formatos ISO con 'T' y cadenas numéricas 'YYYYMMDD'.
-   */
-  private limpiarFormatoFecha(fechaCruda: any): string {
-    if (!fechaCruda) return '';
-    
-    // Aseguramos que sea string para evitar errores con métodos de cadena
-    const fechaStr = String(fechaCruda).trim();
-
-    // 1. Caso: Formato YYYYMMDD continuo (Ej: "19930108")
-    // Verificamos longitud 8 y que contenga solo números
-    if (fechaStr.length === 8 && /^\d+$/.test(fechaStr)) {
-      const anio = fechaStr.substring(0, 4);
-      const mes = fechaStr.substring(4, 6);
-      const dia = fechaStr.substring(6, 8);
-      return `${dia}/${mes}/${anio}`;
-    }
-
-    // 2. Caso: Formato ISO (Ej: "1993-01-08T00:00:00")
-    if (fechaStr.includes('T')) {
-      const soloFecha = fechaStr.split('T')[0]; // Se queda con "1993-01-08"
-      const partes = soloFecha.split('-');
-      if (partes.length === 3) {
-        return `${partes[2]}/${partes[1]}/${partes[0]}`; // DD/MM/YYYY
-      }
-    }
-
-    // 3. Caso: Formato YYYY-MM-DD sin la 'T'
-    if (fechaStr.includes('-') && fechaStr.length === 10) {
-      const partes = fechaStr.split('-');
-      return `${partes[2]}/${partes[1]}/${partes[0]}`;
-    }
-
-    // Si no coincide con ninguno de los patrones esperados, retorna tal cual
-    return fechaStr;
   }
 }
