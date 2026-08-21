@@ -5,8 +5,8 @@
 
     <div class="hm-search-bar">
         <div class="search-group">
-            <label>Cédula:</label>
-            <input type="text" [(ngModel)]="cedulaBusqueda" placeholder="Ej: 1712345678" (keyup.enter)="buscar()" [disabled]="buscando || enviando">
+            <label>Cédula o Pasaporte:</label>
+            <input type="text" [ngModel]="cedulaBusqueda" (ngModelChange)="cedulaBusqueda = $event.toUpperCase()" placeholder="Ej: 1712345678" (keyup.enter)="buscar()" [disabled]="buscando || enviando" style="text-transform: uppercase;">
         </div>
         <button (click)="buscar()" class="btn-primary" [disabled]="buscando || enviando || !cedulaBusqueda">
             {{ buscando ? 'Buscando...' : 'Buscar Paciente' }}
